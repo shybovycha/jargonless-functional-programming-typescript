@@ -8,18 +8,6 @@ interface Wrappable <A> {
     andThenWrap<B>(func: Func<A, Wrappable<B>>): Wrappable<B>;
 }
 
-// class ExceptionW <A> implements Wrappable <A> {
-//     constructor(private readonly value: Wrappable<A>) {}
-
-//     andThen<B>(func: Func<A, B>): ExceptionW<B> {
-//         return new ExceptionW<B>(this.value.andThen(func));
-//     }
-
-//     andThenWrap<B>(func: Func<A, ExceptionW<B>>): ExceptionW<B> {
-//         return new ExceptionW<B>(this.value.andThenWrap(func));
-//     }
-// }
-
 abstract class Maybe <A> implements Wrappable <A> {
     abstract andThen <B>(func: Func<A, B>): Maybe<B>;
 
@@ -148,18 +136,6 @@ interface Game {
     name: string;
     rank: string;
 }
-
-// const getResponseXML = (response: string): ExceptionW<XMLDocument> => {
-//     try {
-//         return new ExceptionW<XMLDocument>(
-//             () => Either<Error, XMLDocument>.right(new DOMParser().parseFromString(response, "text/xml"))
-//         );
-//     } catch {
-//         return new ExceptionW<XMLDocument>(
-//             () => Either<Error, XMLDocument>.left(new Error('Received invalid XML'))
-//         );
-//     }
-// };
 
 class PromiseIO <A> implements Wrappable<A> {
     constructor(private readonly task: Func0<Promise<A>>) {
