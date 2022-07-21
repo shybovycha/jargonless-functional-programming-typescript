@@ -111,15 +111,15 @@ class ExceptionW <A> implements Wrappable <A> {
 
     andThen<B>(func: Func<A, B>): ExceptionW<B> {
         return new ExceptionW<B>(
-            () => this.task().andThen(func),
-            () => this.exceptionHandler().andThen(func)
+            () => this.runExceptionW().andThen(func),
+            () => this.runExceptionW().andThen(func)
         );
     }
 
     andThenWrap<B>(func: Func<A, ExceptionW<B>>): ExceptionW<B> {
         return new ExceptionW<B>(
-            () => this.task().andThenWrap(func),
-            () => this.exceptionHandler().andThenWrap(func)
+            () => this.runExceptionW().andThenWrap(func),
+            () => this.runExceptionW().andThenWrap(func)
         );
     }
 
