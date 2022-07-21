@@ -123,7 +123,7 @@ class ExceptionW <A> implements Wrappable <A> {
         );
     }
 
-    unsafeRun(): Wrappable<A> {
+    runExceptionW(): Wrappable<A> {
         try {
             return this.task();
         } catch {
@@ -213,17 +213,22 @@ const getRandomTop10Game = (games: Array<Game>): Either<Error, Game> => {
         return Either<Error, Game>.left(new Error('Not enough games'));
     }
 
-    return Either<Error, Game>.right(games[Math.random() * 100 % 10]);
+    // figured out: games[Math.floor(Math.random() * 100) % 10]
+    // error: games[Math.random() * 100 % 10]
+    return Either<Error, Game>.right(games[Math.floor(Math.random() * 100) % 10]);
 };
 
 const printGame = (game: Game): void => {
-    console.log(`#${game.rank}: ${game.name}`);
+    console.log('RESULT', `#${game.rank}: ${game.name}`);
 };
 
-
-const program = new PromiseIOT(fetchAPIResponse().andThen(response => getResponseXML(response)))
+const program =
+    new PromiseIOT(
+        fetchAPIResponse()
+            .andThen(response => getResponseXML(response))
+            .andThen(w => w.runExceptionW())
+    )
     .andThenWrap(doc => extractGames(doc))
     .andThenWrap(games => getRandomTop10Game(games))
     .andThen(game => printGame(game))
-    .runPromiseIOT()
-    .unsafeRun();
+    .runPromiseIOT();
