@@ -123,11 +123,11 @@ class ExceptionW <A> implements Wrappable <A> {
         );
     }
 
-    runExceptionW(): Wrappable<A> {
+    runExceptionW<W extends Wrappable<A>>(): W {
         try {
-            return this.task();
+            return this.task() as W;
         } catch {
-            return this.exceptionHandler();
+            return this.exceptionHandler() as W;
         }
     }
 }
@@ -226,7 +226,7 @@ const program =
     new PromiseIOT(
         fetchAPIResponse()
             .andThen(response => getResponseXML(response))
-            .andThen(w => w.runExceptionW())
+            .andThen(w => w.runExceptionW<Either<Error, XMLDocument>>())
     )
     .andThenWrap(doc => extractGames(doc))
     .andThenWrap(games => getRandomTop10Game(games))
