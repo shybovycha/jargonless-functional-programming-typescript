@@ -158,7 +158,7 @@ class PromiseIO <A> implements Wrappable<A> {
     }
 }
 
-class PromiseIOT <A> {
+class PromiseIOT <A> implements Wrappable <A> {
     constructor(private readonly value: PromiseIO<Wrappable<A>>) {
     }
 
@@ -231,4 +231,5 @@ const program =
     .andThenWrap(doc => extractGames(doc))
     .andThenWrap(games => getRandomTop10Game(games))
     .andThen(game => printGame(game))
-    .runPromiseIOT();
+    .runPromiseIOT()
+    .unsafeRun();
